@@ -1,0 +1,111 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-paper text-ink font-body antialiased;
+  /* Base font size is intentionally large (18px) — larger default text
+     reduces reading strain for older adults without needing zoom. */
+  font-size: 18px;
+}
+
+h1, h2, h3, h4 {
+  @apply font-display font-medium tracking-tight;
+}
+
+/* Bigger, higher-contrast focus rings everywhere — motor precision and
+   low vision are both common in the target audience, so focus states
+   need to be unmissable, not decorative. */
+:focus-visible {
+  outline: 3px solid #1C1B19;
+  outline-offset: 3px;
+  border-radius: 0.5rem;
+}
+
+/* Minimum tap target size of 44px is an accessibility baseline;
+   we go bigger (56px+) throughout for anyone with reduced fine motor control. */
+button, a {
+  min-height: 44px;
+}
+
+::selection {
+  background: #E0A83E33;
+}
+
+/* ---- Minimal card system ---- */
+.card {
+  @apply bg-surface rounded-xl2 border border-line;
+}
+
+.card-hover {
+  @apply transition-all duration-300 ease-smooth;
+}
+.card-hover:hover {
+  @apply shadow-lift -translate-y-1 border-ink/15;
+}
+
+/* Quiet primary button: fills on hover instead of using a loud drop shadow */
+.btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5
+         font-display text-base transition-all duration-300 ease-smooth;
+}
+.btn-primary {
+  @apply bg-ink text-paper;
+}
+.btn-primary:hover {
+  @apply -translate-y-0.5 shadow-lift;
+}
+.btn-outline {
+  @apply bg-transparent border border-ink/15 text-ink;
+}
+.btn-outline:hover {
+  @apply border-ink bg-ink/[0.03] -translate-y-0.5;
+}
+
+/* Animated underline used on nav links / text links — a small, quiet
+   hover cue rather than a color flash. */
+.link-underline {
+  position: relative;
+  text-decoration: none;
+}
+.link-underline::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 100%;
+  bottom: -2px;
+  height: 2px;
+  background: currentColor;
+  transition: right 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.link-underline:hover::after,
+.link-underline.is-active::after {
+  right: 0;
+}
+
+/* Subtle floating idle motion for hero emoji / decorative marks only —
+   never on interactive or informational elements. */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+.float {
+  animation: float 5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
