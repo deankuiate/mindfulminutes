@@ -1,7 +1,5 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { GAMES } from '../lib/games.js'
-import GameCard from '../components/GameCard.jsx'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 18 },
@@ -92,24 +90,6 @@ export default function Home() {
           Read the full evidence behind each game →
         </Link>
       </motion.section>
-
-      {/* Game grid */}
-      <section className="space-y-8">
-        <motion.h2
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="text-2xl font-display font-medium text-center"
-        >
-          Pick a game to play
-        </motion.h2>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {GAMES.map((game, i) => (
-            <GameCard key={game.id} game={game} index={i} />
-          ))}
-        </div>
-      </section>
     </div>
   )
 }
