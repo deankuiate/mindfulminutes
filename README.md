@@ -28,7 +28,7 @@ choice — the full reasoning lives on the in-app **`Science`** page, which doub
 ## Why the assessment is deliberately limited
 
 **This app is a screening companion, not a diagnostic tool**, and it's
-built so it structurally can't become one. `MindfulMinutes` only
+built so it structurally can't become one. **MindfulMinutes** only
 ever produces one of three outcomes:
 
 1. Not enough data yet (fewer than 6 sessions, or fewer than 3 per game)
