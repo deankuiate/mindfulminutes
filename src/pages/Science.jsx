@@ -91,7 +91,7 @@ export default function Science() {
           <p className="text-mute leading-relaxed">
             This app can never diagnose anything, and it's built so that it structurally
             can't drift toward doing so. The assessment logic (see{' '}
-            <code className="bg-ink/5 px-1.5 py-0.5 rounded text-[0.9em]">src/lib/assessment.js</code>) only
+            <code className="bg-ink/5 px-1.5 py-0.5 rounded text-[0.9em]">Check-In Page</code>) only
             ever returns "not enough data yet," "trend looks stable," or "trend has been
             dropping — worth mentioning to your doctor." There is no code path that
             produces a diagnosis or a risk percentage.
