@@ -1,6 +1,6 @@
 import { Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
-import { AuthProvider } from '/lib/authcontext.jsx'
+import { AuthProvider } from './lib/authcontext.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
 import Navbar from './components/Navbar.jsx'
 import Home from './pages/Home.jsx'
