@@ -1,5 +1,5 @@
 import { Navigate, useLocation } from 'react-router-dom'
-import { useAuth } from './lib/authcontext.jsx'
+import { useAuth } from '/lib/authcontext.jsx'
 
 export default function ProtectedRoute({ children }) {
   const { user, loading, supabaseEnabled } = useAuth()
