@@ -11,9 +11,9 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "canvas-confetti": "^1.9.3",
     "@supabase/ssr": "^0.12.7",
     "@supabase/supabase-js": "^2.117.1",
+    "canvas-confetti": "^1.9.4",
     "framer-motion": "^11.11.9",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
