@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback } from 'react'
+import { motion } from 'framer-motion'
 import { recordSession } from '../lib/db.js'
 import ResultCard from '../components/ResultCard.jsx'
 import IntroScreen from '../components/IntroScreen.jsx'
 
-const GRID_SIZE = 9 // 3x3
+const GRID_SIZE = 9
 const START_LENGTH = 3
 const MAX_LENGTH = 8
 const FLASH_MS = 650
@@ -19,7 +20,7 @@ function randomSequence(len) {
 }
 
 export default function PatternMatch() {
-  const [phase, setPhase] = useState('intro') // intro | show | input | done
+  const [phase, setPhase] = useState('intro')
   const [length, setLength] = useState(START_LENGTH)
   const [sequence, setSequence] = useState([])
   const [litIndex, setLitIndex] = useState(-1)
@@ -116,6 +117,7 @@ export default function PatternMatch() {
     return (
       <ResultCard
         emoji="✨"
+        color="grape"
         title="Firefly Path — Complete!"
         score={result.score}
         maxScore={result.maxScore}
@@ -135,18 +137,21 @@ export default function PatternMatch() {
           const isLit = phase === 'show' && litIndex === i
           const isChosen = phase === 'input' && userSeq.includes(i)
           return (
-            <button
+            <motion.button
               key={i}
               onClick={() => handleCellClick(i)}
               disabled={phase !== 'input'}
               aria-label={`tile ${i + 1}`}
+              whileTap={phase === 'input' ? { scale: 0.92 } : {}}
+              animate={isLit ? { scale: [1, 1.08, 1.05] } : { scale: 1 }}
+              transition={{ duration: 0.3 }}
               className={`w-20 h-20 rounded-2xl border transition-all duration-200 ease-smooth text-3xl flex items-center justify-center
-                ${isLit ? 'bg-grape border-grape scale-105 shadow-soft' : isChosen ? 'bg-grape/15 border-grape' : 'bg-surface border-line hover:border-grape/30'}
+                ${isLit ? 'bg-grape border-grape shadow-lift' : isChosen ? 'bg-grape/15 border-grape' : 'bg-surface border-line hover:border-grape/30'}
                 ${wrongFlash ? 'animate-pulse' : ''}
               `}
             >
               {(isLit || isChosen) && <span aria-hidden="true">✨</span>}
-            </button>
+            </motion.button>
           )
         })}
       </div>

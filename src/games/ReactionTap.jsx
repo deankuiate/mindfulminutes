@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback } from 'react'
+import { motion } from 'framer-motion'
 import { recordSession } from '../lib/db.js'
 import ResultCard from '../components/ResultCard.jsx'
 import IntroScreen from '../components/IntroScreen.jsx'
@@ -7,17 +8,13 @@ const TRIALS = 5
 const MIN_DELAY = 1200
 const MAX_DELAY = 3500
 
-// Reaction time -> 0-100 score. Anything at/under 300ms is "perfect";
-// anything at/over 1200ms scores near zero. This range is chosen to be
-// generous — it's meant to track someone's own trend over time, not to
-// compare them to population norms.
 function scoreForRT(ms) {
   const clamped = Math.max(300, Math.min(1200, ms))
   return Math.round(100 - ((clamped - 300) / (1200 - 300)) * 100)
 }
 
 export default function ReactionTap() {
-  const [phase, setPhase] = useState('intro') // intro | waiting | ready | tooSoon | done
+  const [phase, setPhase] = useState('intro')
   const [trial, setTrial] = useState(0)
   const [times, setTimes] = useState([])
   const [result, setResult] = useState(null)
@@ -92,6 +89,7 @@ export default function ReactionTap() {
     return (
       <ResultCard
         emoji="☀️"
+        color="sun"
         title="Sunbeam Tap — Complete!"
         score={result.score}
         maxScore={result.maxScore}
@@ -103,17 +101,31 @@ export default function ReactionTap() {
 
   return (
     <div className="text-center py-16 space-y-6">
-      <p className="text-ink/50 font-display">Round {Math.min(trial + 1, TRIALS)} of {TRIALS}</p>
-      <button
-        onClick={handleTap}
-        aria-label={phase === 'ready' ? 'Tap the sun now' : 'Wait for it'}
-        className={`w-56 h-56 rounded-full mx-auto flex items-center justify-center text-7xl transition-all duration-300 ease-smooth border-4
-          ${phase === 'ready' ? 'bg-sun border-sun scale-105 shadow-lift' : 'bg-ink/[0.04] border-transparent hover:bg-ink/[0.07]'}
-        `}
-      >
-        {phase === 'ready' ? '☀️' : phase === 'tooSoon' ? '⏳' : '·'}
-      </button>
-      <p className="text-ink/60">
+      <p className="text-mute font-display">Round {Math.min(trial + 1, TRIALS)} of {TRIALS}</p>
+      <div className="relative flex items-center justify-center">
+        {phase === 'waiting' && (
+          <motion.div
+            className="absolute w-56 h-56 rounded-full border-2 border-ink/10"
+            animate={{ scale: [1, 1.12, 1], opacity: [0.5, 0.15, 0.5] }}
+            transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
+            aria-hidden="true"
+          />
+        )}
+        <motion.button
+          onClick={handleTap}
+          aria-label={phase === 'ready' ? 'Tap the sun now' : 'Wait for it'}
+          initial={false}
+          animate={phase === 'ready' ? { scale: [0.85, 1.05, 1] } : { scale: 1 }}
+          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          whileTap={{ scale: 0.92 }}
+          className={`relative w-56 h-56 rounded-full flex items-center justify-center text-7xl transition-colors duration-300 ease-smooth border-4
+            ${phase === 'ready' ? 'bg-sun border-sun shadow-lift' : 'bg-ink/[0.04] border-transparent hover:bg-ink/[0.07]'}
+          `}
+        >
+          {phase === 'ready' ? '☀️' : phase === 'tooSoon' ? '⏳' : '·'}
+        </motion.button>
+      </div>
+      <p className="text-mute">
         {phase === 'waiting' && 'Wait for the sun…'}
         {phase === 'ready' && 'Tap now!'}
         {phase === 'tooSoon' && 'Too soon! Wait for the sun this time.'}

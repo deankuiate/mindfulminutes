@@ -18,8 +18,13 @@ create index if not exists game_sessions_game_id_idx on public.game_sessions (ga
 -- Row Level Security: every player can only see and write their own rows.
 alter table public.game_sessions enable row level security;
 
--- If you turn on Supabase Auth (recommended for real multi-user use),
--- these policies restrict access to the signed-in user's own rows:
+-- These policies restrict access to the signed-in user's own rows. The
+-- app now requires a real Supabase Auth account (see src/lib/AuthContext.jsx
+-- and src/components/ProtectedRoute.jsx) whenever Supabase is connected,
+-- and src/lib/db.js always writes/reads using the authenticated user's
+-- real auth.uid() as player_id — so these policies work out of the box,
+-- no extra setup needed beyond enabling email/password auth (on by
+-- default in a new Supabase project).
 create policy "Users can insert their own sessions"
   on public.game_sessions for insert
   with check (auth.uid() = player_id);
@@ -27,12 +32,3 @@ create policy "Users can insert their own sessions"
 create policy "Users can view their own sessions"
   on public.game_sessions for select
   using (auth.uid() = player_id);
-
--- NOTE: While the app is running WITHOUT Supabase Auth wired up (the
--- default, out-of-the-box state), player_id is a random UUID generated
--- client-side and stored in localStorage — it is NOT a Supabase auth
--- user id, so the policies above will block writes until you either:
---   1. Add Supabase Auth (email or magic link) and use auth.uid() as
---      the player_id everywhere, matching src/lib/db.js, OR
---   2. Relax these policies for a trusted single-user/demo deployment.
--- This is called out explicitly in README.md > "Connecting Supabase".

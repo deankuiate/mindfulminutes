@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { recordSession } from '../lib/db.js'
 import ResultCard from '../components/ResultCard.jsx'
 import IntroScreen from '../components/IntroScreen.jsx'
@@ -22,7 +23,7 @@ function shuffle(arr) {
 }
 
 export default function FaceNameMatch() {
-  const [phase, setPhase] = useState('intro') // intro | study | quiz | done
+  const [phase, setPhase] = useState('intro')
   const [people, setPeople] = useState([])
   const [studyIndex, setStudyIndex] = useState(0)
   const [quizOrder, setQuizOrder] = useState([])
@@ -101,9 +102,19 @@ export default function FaceNameMatch() {
     const person = people[studyIndex]
     return (
       <div className="text-center py-16 space-y-6">
-        <p className="text-ink/50 font-display">Meet your new friend…</p>
-        <div className="text-8xl" aria-hidden="true">{person.emoji}</div>
-        <p className="text-4xl font-display font-semibold text-blush">{person.name}</p>
+        <p className="text-mute font-display">Meet your new friend…</p>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={studyIndex}
+            initial={{ opacity: 0, y: 10, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.1 }}
+            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <div className="text-8xl" aria-hidden="true">{person.emoji}</div>
+            <p className="text-4xl font-display font-semibold text-blush mt-2">{person.name}</p>
+          </motion.div>
+        </AnimatePresence>
         <button onClick={nextStudy} className="btn bg-blush text-white px-8 py-4 hover:-translate-y-0.5 transition-transform duration-300">
           {studyIndex + 1 >= people.length ? "I'm ready!" : 'Next friend'}
         </button>
@@ -115,26 +126,46 @@ export default function FaceNameMatch() {
     const person = people[quizOrder[quizIndex]]
     return (
       <div className="max-w-md mx-auto text-center space-y-6 py-10">
-        <p className="text-ink/50 font-display">Who is this?</p>
-        <div className="text-8xl" aria-hidden="true">{person.emoji}</div>
+        <p className="text-mute font-display">Who is this?</p>
+        <motion.div
+          key={quizIndex}
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3 }}
+          className="text-8xl"
+          aria-hidden="true"
+        >
+          {person.emoji}
+        </motion.div>
         <div className="grid grid-cols-2 gap-3">
-          {options.map((opt) => (
-            <button
-              key={opt.name}
-              onClick={() => handleAnswer(opt.name)}
-              disabled={feedback !== null}
-              className={`px-4 py-4 rounded-2xl font-display border text-lg transition-all duration-200 ease-smooth
-                ${feedback && opt.name === person.name ? 'bg-teal/15 border-teal' : 'bg-surface border-line hover:border-blush/40 hover:-translate-y-0.5'}
-              `}
-            >
-              {opt.name}
-            </button>
-          ))}
+          {options.map((opt) => {
+            const isCorrectOpt = feedback && opt.name === person.name
+            const isWrongPick = feedback === 'wrong' && opt.name !== person.name
+            return (
+              <motion.button
+                key={opt.name}
+                onClick={() => handleAnswer(opt.name)}
+                disabled={feedback !== null}
+                animate={isCorrectOpt ? { scale: [1, 1.08, 1] } : {}}
+                whileTap={!feedback ? { scale: 0.95 } : {}}
+                transition={{ duration: 0.3 }}
+                className={`px-4 py-4 rounded-2xl font-display border text-lg transition-all duration-200 ease-smooth
+                  ${isCorrectOpt ? 'bg-teal/15 border-teal' : isWrongPick ? 'opacity-50' : 'bg-surface border-line hover:border-blush/40 hover:-translate-y-0.5'}
+                `}
+              >
+                {opt.name}
+              </motion.button>
+            )
+          })}
         </div>
         {feedback && (
-          <p className="font-display text-lg">
+          <motion.p
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="font-display text-lg"
+          >
             {feedback === 'correct' ? '✅ That\u2019s right!' : `The answer was ${person.name}`}
-          </p>
+          </motion.p>
         )}
       </div>
     )
@@ -143,6 +174,7 @@ export default function FaceNameMatch() {
   return (
     <ResultCard
       emoji="🙂"
+      color="blush"
       title="Friendly Faces — Complete!"
       score={result.score}
       maxScore={result.maxScore}

@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { recordSession } from '../lib/db.js'
 import ResultCard from '../components/ResultCard.jsx'
 import IntroScreen from '../components/IntroScreen.jsx'
@@ -12,7 +13,7 @@ function randomDigits(len) {
 }
 
 export default function DigitSpan() {
-  const [phase, setPhase] = useState('intro') // intro | show | input | done
+  const [phase, setPhase] = useState('intro')
   const [length, setLength] = useState(START_LENGTH)
   const [sequence, setSequence] = useState([])
   const [showIndex, setShowIndex] = useState(0)
@@ -89,11 +90,29 @@ export default function DigitSpan() {
   if (phase === 'show') {
     return (
       <div className="text-center py-24 space-y-6">
-        <p className="text-ink/50 font-display">Watch closely…</p>
-        <p className="text-7xl font-display font-semibold text-teal" aria-live="polite">
-          {sequence[showIndex] ?? '✅'}
-        </p>
-        <p className="text-ink/40">Digit {Math.min(showIndex + 1, sequence.length)} of {sequence.length}</p>
+        <p className="text-mute font-display">Watch closely…</p>
+        <div className="relative flex items-center justify-center h-28">
+          <motion.div
+            className="absolute w-44 h-44 rounded-full bg-teal/10"
+            animate={{ scale: [1, 1.15, 1], opacity: [0.6, 0.3, 0.6] }}
+            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+            aria-hidden="true"
+          />
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={showIndex}
+              initial={{ opacity: 0, scale: 0.7, rotate: -6 }}
+              animate={{ opacity: 1, scale: 1, rotate: 0 }}
+              exit={{ opacity: 0, scale: 1.2 }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              className="relative text-7xl font-display font-semibold text-teal"
+              aria-live="polite"
+            >
+              {sequence[showIndex] ?? '✅'}
+            </motion.p>
+          </AnimatePresence>
+        </div>
+        <p className="text-mute/70">Digit {Math.min(showIndex + 1, sequence.length)} of {sequence.length}</p>
       </div>
     )
   }
@@ -126,6 +145,7 @@ export default function DigitSpan() {
   return (
     <ResultCard
       emoji="🔢"
+      color="teal"
       title="Number Nest — Complete!"
       score={result.score}
       maxScore={result.maxScore}

@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { recordSession } from '../lib/db.js'
 import ResultCard from '../components/ResultCard.jsx'
 import IntroScreen from '../components/IntroScreen.jsx'
@@ -17,7 +18,7 @@ function shuffle(arr) {
 }
 
 export default function WordRecall() {
-  const [phase, setPhase] = useState('intro') // intro | study | recall | done
+  const [phase, setPhase] = useState('intro')
   const [studyWords, setStudyWords] = useState([])
   const [choices, setChoices] = useState([])
   const [selected, setSelected] = useState([])
@@ -82,10 +83,28 @@ export default function WordRecall() {
     const word = studyWords[studyIndex]
     return (
       <div className="text-center py-24 space-y-6">
-        <p className="text-ink/50 font-display">Remember this word…</p>
-        <p className="text-6xl font-display font-semibold text-coral" aria-live="polite">
-          {word || '✅'}
-        </p>
+        <p className="text-mute font-display">Remember this word…</p>
+        <div className="relative flex items-center justify-center h-24">
+          <motion.div
+            className="absolute w-40 h-40 rounded-full bg-coral/10"
+            animate={{ scale: [1, 1.15, 1], opacity: [0.6, 0.3, 0.6] }}
+            transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
+            aria-hidden="true"
+          />
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={studyIndex}
+              initial={{ opacity: 0, scale: 0.85, y: 8 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 1.1 }}
+              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              className="relative text-6xl font-display font-semibold text-coral"
+              aria-live="polite"
+            >
+              {word || '✅'}
+            </motion.p>
+          </AnimatePresence>
+        </div>
       </div>
     )
   }
@@ -97,9 +116,12 @@ export default function WordRecall() {
         <p className="text-center text-ink/60">Tap every word you remember from the list.</p>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {choices.map((word) => (
-            <button
+            <motion.button
               key={word}
               onClick={() => toggleChoice(word)}
+              whileTap={{ scale: 0.94 }}
+              animate={selected.includes(word) ? { scale: [1, 1.06, 1] } : {}}
+              transition={{ duration: 0.25 }}
               className={`px-4 py-4 rounded-2xl font-display border transition-all duration-200 ease-smooth ${
                 selected.includes(word)
                   ? 'bg-coral text-white border-coral shadow-soft'
@@ -107,7 +129,7 @@ export default function WordRecall() {
               }`}
             >
               {word}
-            </button>
+            </motion.button>
           ))}
         </div>
         <div className="text-center">
@@ -122,6 +144,7 @@ export default function WordRecall() {
   return (
     <ResultCard
       emoji="🌷"
+      color="coral"
       title="Garden of Words — Complete!"
       score={result.score}
       maxScore={result.maxScore}

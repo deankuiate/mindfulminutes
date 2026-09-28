@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
-import { NavLink, useLocation } from 'react-router-dom'
+import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useAuth } from '/lib/AuthContext.jsx'
 
 const links = [
   { to: '/', label: 'Home' },
@@ -13,9 +14,15 @@ const links = [
 export default function Navbar() {
   const [open, setOpen] = useState(false)
   const location = useLocation()
+  const navigate = useNavigate()
+  const { user, signOut, supabaseEnabled } = useAuth()
 
-  // Close the mobile menu whenever the route changes
   useEffect(() => setOpen(false), [location.pathname])
+
+  async function handleSignOut() {
+    await signOut()
+    navigate('/')
+  }
 
   return (
     <motion.header
@@ -35,26 +42,37 @@ export default function Navbar() {
           <span>Mindful Minutes</span>
         </NavLink>
 
-        {/* Desktop nav — hidden below sm, plain underline links */}
-        <ul className="hidden sm:flex flex-wrap gap-1 md:gap-2">
-          {links.map((l) => (
-            <li key={l.to}>
-              <NavLink
-                to={l.to}
-                end={l.to === '/'}
-                className={({ isActive }) =>
-                  `link-underline px-3 py-2 font-display text-base ${
-                    isActive ? 'text-ink is-active' : 'text-mute hover:text-ink'
-                  }`
-                }
-              >
-                {l.label}
+        <div className="hidden sm:flex items-center gap-2 md:gap-3">
+          <ul className="flex flex-wrap gap-1 md:gap-2">
+            {links.map((l) => (
+              <li key={l.to}>
+                <NavLink
+                  to={l.to}
+                  end={l.to === '/'}
+                  className={({ isActive }) =>
+                    `link-underline px-3 py-2 font-display text-base ${
+                      isActive ? 'text-ink is-active' : 'text-mute hover:text-ink'
+                    }`
+                  }
+                >
+                  {l.label}
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+          {supabaseEnabled && (
+            user ? (
+              <button onClick={handleSignOut} className="btn btn-outline py-2 px-4 text-sm">
+                Sign out
+              </button>
+            ) : (
+              <NavLink to="/login" className="btn btn-primary py-2 px-4 text-sm">
+                Sign in
               </NavLink>
-            </li>
-          ))}
-        </ul>
+            )
+          )}
+        </div>
 
-        {/* Mobile menu button — hidden from sm up */}
         <button
           onClick={() => setOpen((o) => !o)}
           aria-expanded={open}
@@ -80,7 +98,6 @@ export default function Navbar() {
         </button>
       </nav>
 
-      {/* Mobile dropdown panel */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -112,6 +129,24 @@ export default function Navbar() {
                   </NavLink>
                 </motion.li>
               ))}
+              {supabaseEnabled && (
+                <motion.li
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: links.length * 0.04, duration: 0.25 }}
+                  className="py-3"
+                >
+                  {user ? (
+                    <button onClick={handleSignOut} className="btn btn-outline w-full">
+                      Sign out
+                    </button>
+                  ) : (
+                    <NavLink to="/login" className="btn btn-primary w-full">
+                      Sign in
+                    </NavLink>
+                  )}
+                </motion.li>
+              )}
             </ul>
           </motion.div>
         )}
