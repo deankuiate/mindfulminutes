@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { useAuth } from '/lib/authcontext.jsx'
+import { useAuth } from '../lib/authcontext.jsx'
 
 export default function Login() {
   const { signIn, signUp, supabaseEnabled } = useAuth()
