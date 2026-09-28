@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useAuth } from '/lib/AuthContext.jsx'
+import { useAuth } from './lib/authcontext.jsx'
 
 const links = [
   { to: '/', label: 'Home' },
