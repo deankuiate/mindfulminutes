@@ -9,6 +9,17 @@ persistent, cross-device score history.
 
 ---
 
+## Why?
+
+I'm from Cameroon, and I've noticed a lot of cognitive decline in my personal community and it's even ran in my distant family as well.
+
+Cognitive decline and dementia are a growing public health challenge in Cameroon, with overall cognitive impairment rates estimated between 21% and 33% among adults aged 60 and older.
+
+I hope that helping even a few people in the world better their physical & mental health here will shed a light into other communities like my own!!!
+
+
+---
+
 ## What's inside
 
 | Game | Domain tested | Based on |
