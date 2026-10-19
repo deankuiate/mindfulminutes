@@ -68,6 +68,7 @@ Cognitive decline and dementia are a growing public health challenge in Cameroon
 
 I hope that helping even a few people in the world better their physical & mental health here will shed a light into other communities like my own!!!
 
+<img width="2048" height="1365" alt="Elderly-Poverty-in-Cameroon-1" src="https://github.com/user-attachments/assets/d1cc3cb9-584b-430a-bec0-e9245b08a132" />
 
 ---
 
