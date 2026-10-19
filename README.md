@@ -9,7 +9,7 @@ persistent, cross-device score history.
 
 ---
 
-## Why?
+## Why? 🇨🇲
 
 I'm from Cameroon, and I've noticed a lot of cognitive decline in my personal community and it's even ran in my distant family as well.
 
