@@ -5,10 +5,6 @@ mindfulminutesapp.netlify.app
 Five short, colorful memory mini-games for older adults modeled on a
 real, published cognitive-assessment tasks!
 
-Built with **React + Vite + Tailwind CSS**, ready to deploy to **Vercel** or
-**Netlify**, with an optional **Supabase** backend for real accounts and
-persistent, cross-device score history.
-
 ---
 
 ## 🧰 Tech Stack
