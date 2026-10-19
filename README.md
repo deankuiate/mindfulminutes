@@ -121,5 +121,5 @@ Piloted informally with about **20 older adults across two senior living communi
 ## License & last notes
 
 MIT — do whatever's useful with it.
-**Built with 💛 by [Your Name]** · [LinkedIn](https://www.linkedin.com/in/deankuiate/)
+**Built by Dean Kuiate** · [LinkedIn](https://www.linkedin.com/in/deankuiate/)
 *For the people who taught me, and the ones I hope to help remember.*
